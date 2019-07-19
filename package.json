@@ -1,0 +1,26 @@
+{
+  "name": "weather-api-parser-teamjw",
+  "version": "1.0.0",
+  "description": "This is parser of open api on kma site",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/summsu84/node-weather-api-parser.git"
+  },
+  "keywords": [
+    "weather",
+    "api"
+  ],
+  "author": "teamjw-summsu84",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/summsu84/node-weather-api-parser/issues"
+  },
+  "homepage": "https://github.com/summsu84/node-weather-api-parser#readme",
+  "dependencies": {
+    "request": "^2.88.0"
+  }
+}
