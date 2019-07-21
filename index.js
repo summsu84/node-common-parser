@@ -1,32 +1,79 @@
 'use strict';
-const KmaApiParser = require('./lib/kma-api-parser');
-const request = require('request');
-
+const KmaApiRequest = require('./lib/kma-api-request');
+const Const = require('./lib/const');
 module.exports = {
-    'parsingResultOfMiddleForecastAndSpaceAndTemp': (type, body, onSuccess, onError) => {
-        KmaApiParser.parsingResultOfMiddleForecastAndSpaceAndTemp(type, body, onSuccess, onError);
-    },
-    'parsingResultOfForecastSpaceData': (type, body, onSuccess, onError) => {
-        KmaApiParser.parsingResultOfForecastSpaceData(type, body, onSuccess, onError);
-    },
-    'requestWeatherRequest' : (reqService, type, options, onSuccess, onError) => {
-        request(options, (error, response, body) => {
-            if (error) {
-                console.error(error);
-                if (onError)
-                    onError(error, null);
-            } else if (response.statusCode !== 200) {
-                console.error(body);
-            } else {
-                //reqService 0 : ForecastSpaceData
-                if(reqService === 0)
-                {
-                    KmaApiParser.parsingResultOfForecastSpaceData(type, body, onSuccess, onError);
-                }else
-                {
-                    KmaApiParser.parsingResultOfMiddleForecastAndSpaceAndTemp(type, body, onSuccess, onError);
+
+    //service_key, request_type, options, success callback, error callback
+    'requestWeatherRequest' : (serviceKey, type, options, onSuccess, onError) => {
+
+        // forecast space request
+        if(type === 0)
+        {
+            KmaApiRequest.getForecastSpaceDate(serviceKey, options, onSuccess, onError);
+        }
+        // middle forecast, middle forecast temp and middle forecast land request
+        else if(type === 1)
+        {
+            const retVal = {
+                items:[]
+            };
+
+            KmaApiRequest.getMiddleForecastWeather(serviceKey, options, (result) => {
+                // success
+                retVal.items.push(result);
+                KmaApiRequest.getMiddleTemperature(serviceKey, options, (result) => {
+                    // success
+                    retVal.items.push(result);
+                    KmaApiRequest.getMiddleLandWeather(serviceKey, options, (result) => {
+                        // success
+                        retVal.items.push(result);
+                        onSuccess(Const.responsecodeSucceed, retVal);
+                    },(err,code, msg)=>{
+                        // error
+                        if(err){
+                            onError(Const.responsecodeError, {
+                                code : Const.responsecodeError,
+                                data : msg
+                            })
+
+                        }else{
+                            onError(Const.responsecodeError, {
+                                code : Const.responsecodeError,
+                                data : msg
+                            })
+                        }
+                    });
+                },(err,code, msg)=>{
+                    // error
+                    if(err){
+                        onError(Const.responsecodeError, {
+                            code : Const.responsecodeError,
+                            data : msg
+                        })
+
+                    }else{
+                        onError(Const.responsecodeError, {
+                            code : Const.responsecodeError,
+                            data : msg
+                        })
+                    }
+
+                });
+            },(err,code, msg)=>{
+                // error
+                if(err){
+                    onError(Const.responsecodeError, {
+                        code : Const.responsecodeError,
+                        data : msg
+                    })
+
+                }else{
+                    onError(Const.responsecodeError, {
+                        code : Const.responsecodeError,
+                        data : msg
+                    })
                 }
-            }
-        });
+            });
+        }
     }
 };
