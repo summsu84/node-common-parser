@@ -1,24 +1,81 @@
-기상청 오픈 API 파싱 모듈
 
-1. 동네예보 정보 파싱
+# KMA(Korea Meteorological Administration) Open API Helper  - Simple KMA Open API Client
 
-2. 중기 기온 정보 파싱
+## Summary
 
-3. 중기 육상 정보 파싱
+This is designed to help request KMA's open API such as forecast, middle forecast.
+It just need KMA's open API service key, forecast date, area code which is download KMA's web site.
 
-사용방법
--------------------------------------------------------------------------------------------
-const kmaWeatherApiHelper = require('weather-api-parser-teamjw');
-const option = {"url": "", "method": "GET"};
-//동네 예보 URL 샘플
-option.url = "http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService2/ForecastSpaceData?serviceKey=[Service_KEY]&base_date=[date]&base_time=0500&nx=59&ny=126&numOfRows=300&pageNo=1&_type=json"
+## Forecast Request
 
-// 중기 리포트, 육상, 기온 정포 URL 샘플 업데이트 예정
+This is forecast weather per 3 hours by 3 days.
 
-kmaWeatherApiHelper.requestWeatherRequest(0, 'forecastSpace', option, (result) => {
-    // 성공시 콜백 함수 재정의
-    res.send(result);
-}, (err,code, msg) =>{
-    // 실패시 콜백 함수 재정의
-    res.send(msg);
-})
+```js
+const KmaHelper = require('./index.js');
+
+const options = {
+    "date": "YYYYMMDD",             //only change this field 
+    "time": "0500",                 //base time (no change needed)
+    "nx" : "59",                    //area nx code
+    "ny" : "126"                    //area ny code
+};
+
+// nx, ny area code can be found on KMA's web site.
+
+const serviceKey = '[Input Forecast KMA Open API Key]';
+
+/**
+*  params
+*  serviceKey : serviceKey,
+*  type : service Type, (0 : forecast request, 1 : middle forecast request)
+*  success callback
+*  error callback
+*/
+KmaHelper.requestWeatherRequest(serviceKey, 0, options, (code, result)=>{
+    // This function is success callback which you need to customize.
+    console.log(result);
+}, (err,code, msg) => {
+    // This function is error callback which you need to customize.
+    console.log(err);
+} );
+```
+
+---
+
+
+## Middle Forecast
+
+This is forecast middle weather land information, forecast report and middle temperature information.
+
+```js
+const KmaHelper = require('./index.js');
+
+const options = {
+    "landRegId": "11B00000",        // landRegId for middle weather land forecast
+    "tempRegId": "11B20101",        // tempRegId for middle weather temperature forecast
+    "stnId" : "109",                //stnId code for weather forecast summary
+    "time" : "YYYYMMDD0600"         //only change this field but time is not needed to change.
+};
+
+// landRegId, tempRegId, stnId code can be found on KMA's web site.
+const serviceKey = '[Input Middle Forecast KMA Open API Key]';
+
+/**
+*  params
+*  serviceKey : serviceKey,
+*  type : service Type, (0 : forecast request, 1 : middle forecast request)
+*  success callback
+*  error callback
+*/
+KmaHelper.requestWeatherRequest(serviceKey, 1, options, (code, result) =>{
+    // This function is success callback which you need to customize.
+    console.log(code, result);
+}, (err,code, msg) => {
+     // This function is error callback which you need to customize.
+    console.log(err);
+} );
+```
+
+
+---
+

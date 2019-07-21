@@ -1,10 +1,10 @@
 {
   "name": "weather-api-parser-teamjw",
-  "version": "1.0.1",
-  "description": "This is parser of open api on kma site",
+  "version": "1.1.",
+  "description": "This is helper module to request KMA open API. (ForecastSpace, MIddle Forecast, Middle Forecast Land, Middle Forecast Temperature)",
   "main": "index.js",
   "scripts": {
-    "test": "npm test.js"
+    "test": "npm test-forecast.js"
   },
   "repository": {
     "type": "git",

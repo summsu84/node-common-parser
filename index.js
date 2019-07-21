@@ -9,7 +9,24 @@ module.exports = {
         // forecast space request
         if(type === 0)
         {
-            KmaApiRequest.getForecastSpaceDate(serviceKey, options, onSuccess, onError);
+            KmaApiRequest.getForecastSpaceDate(serviceKey, options, (result) => {
+                // success
+                onSuccess(Const.responsecodeSucceed, result);
+            },(err,code, msg)=>{
+                // error
+                if(err){
+                    onError(Const.responsecodeError, {
+                        code : Const.responsecodeError,
+                        data : msg
+                    })
+
+                }else{
+                    onError(Const.responsecodeError, {
+                        code : Const.responsecodeError,
+                        data : msg
+                    })
+                }
+            });
         }
         // middle forecast, middle forecast temp and middle forecast land request
         else if(type === 1)
